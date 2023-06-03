@@ -9,7 +9,7 @@ defmodule Bowling.Games.FramesHandler do
 
   def add_fallen_pins(frames, fallen_pins) do
     case Enum.count(frames) do
-      turn when -1 < turn and turn < 11 -> {:ok, do_add_fallen_pins(frames, fallen_pins)}
+      turn when -1 < turn and turn < 11 -> do_add_fallen_pins(frames, fallen_pins)
       _ -> :invalid_turn
     end
   end
@@ -29,17 +29,23 @@ defmodule Bowling.Games.FramesHandler do
       {[10], 10} -> :update
       {[10], _turn} -> :add
       {[10, _number], 10} -> :update
+      {[_number_1, _number_2, _number_3], 10} -> :invalid
       {[_number_1], _turn} -> :update
       {[number_1, number_2], 10} when number_1 + number_2 == 10 -> :update
+      {[_number_1, _number_2], 10} -> :invalid
       {[_number_1, _number_2], _turn} -> :add
     end
   end
 
   defp do_action(:add, frames, fallen_pins) do
-    frames ++ [[fallen_pins]]
+    {:ok, frames ++ [[fallen_pins]]}
   end
 
   defp do_action(:update, frames, fallen_pins) do
-    List.update_at(frames, -1, &(&1 ++ [fallen_pins]))
+    {:ok, List.update_at(frames, -1, &(&1 ++ [fallen_pins]))}
+  end
+
+  defp do_action(:invalid, _frams, _fallen_pins) do
+    :invalid_turn
   end
 end

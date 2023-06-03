@@ -37,5 +37,14 @@ defmodule Bowling.Games.FramesHandlerTest do
 
       assert {:ok, expected_frames} == FramesHandler.add_fallen_pins(frames, 10)
     end
+
+    test "invalid fallend pins" do
+      assert :invalid_fallend_pins == FramesHandler.add_fallen_pins([], 11)
+    end
+
+    test "invalid turn" do
+      frames = [[10], [10], [10], [10], [10], [10], [10], [10], [10], [10, 10, 10]]
+      assert :invalid_turn == FramesHandler.add_fallen_pins(frames, 5)
+    end
   end
 end
