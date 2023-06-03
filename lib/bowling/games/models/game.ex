@@ -19,11 +19,9 @@ defmodule Bowling.Games.Models.Game do
           players: players
         }
 
-  defstruct [
-    current_player: nil,
-    current_turn: 0,
-    id: nil,
-    next_players: [],
-    players: []
-  ]
+  defstruct current_player: nil,
+            current_turn: 0,
+            id: nil,
+            next_players: [],
+            players: []
 end

@@ -3,7 +3,18 @@ defmodule Bowling.Games.FramesHandler do
   Module to handle how add fallen pins in each frame.
   """
 
+  def add_fallen_pins(_frames, fallen_pins) when fallen_pins < 0 or 10 < fallen_pins do
+    :invalid_fallend_pins
+  end
+
   def add_fallen_pins(frames, fallen_pins) do
+    case Enum.count(frames) do
+      turn when -1 < turn and turn < 11 -> {:ok, do_add_fallen_pins(frames, fallen_pins)}
+      _ -> :invalid_turn
+    end
+  end
+
+  defp do_add_fallen_pins(frames, fallen_pins) do
     frames
     |> add_or_update_frame?()
     |> do_action(frames, fallen_pins)
