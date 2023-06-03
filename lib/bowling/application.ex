@@ -13,9 +13,9 @@ defmodule Bowling.Application do
       # Start the PubSub system
       {Phoenix.PubSub, name: Bowling.PubSub},
       # Start the Endpoint (http/https)
-      BowlingWeb.Endpoint
-      # Start a worker by calling: Bowling.Worker.start_link(arg)
-      # {Bowling.Worker, arg}
+      BowlingWeb.Endpoint,
+      # Start games dynamic supervisor
+      Bowling.Games.DynamicSupervisor
     ]
 
     # See https://hexdocs.pm/elixir/Supervisor.html
