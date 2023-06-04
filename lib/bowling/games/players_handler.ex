@@ -8,6 +8,10 @@ defmodule Bowling.Games.PlayersHandler do
     {:ok, %{player | frame_scores: frame_scores, frames: frames, total_score: total_score}}
   end
 
+  def continue_playing?(nil, _turn) do
+    :next_turn
+  end
+
   def continue_playing?(%Player{frames: frames}, turn) do
     frames
     |> List.last()
@@ -16,7 +20,10 @@ defmodule Bowling.Games.PlayersHandler do
 
   defp do_continue_playing?([10], 10), do: :continue
   defp do_continue_playing?([10, _thrown_2], 10), do: :continue
-  defp do_continue_playing?([thrown_1, thrown_2], 10) when thrown_1 + thrown_2 == 10, do: :continue
+
+  defp do_continue_playing?([thrown_1, thrown_2], 10) when thrown_1 + thrown_2 == 10,
+    do: :continue
+
   defp do_continue_playing?([10], _turn), do: :next_turn
   defp do_continue_playing?([_thrown_1, _thrown_2], _turn), do: :next_turn
   defp do_continue_playing?(_frame, _turn), do: :continue

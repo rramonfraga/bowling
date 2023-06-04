@@ -4,7 +4,7 @@ defmodule Bowling.Games.ScoreCalculatorTest do
   alias Bowling.Games.ScoreCalculator
 
   describe "calculate/2" do
-      test "on success" do
+    test "on success" do
       frames = []
       assert {[], 0} == ScoreCalculator.calculate(frames)
 

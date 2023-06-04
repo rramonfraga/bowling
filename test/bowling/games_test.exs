@@ -11,10 +11,10 @@ defmodule Bowling.GamesTest do
       game = %Game{id: "LANE-1", players: players}
 
       expected_game = %Game{
-        current_player: "Maria",
+        current_player_name: "Maria",
         current_turn: 1,
         id: "LANE-1",
-        next_players: ["Juan", "Rafael"],
+        next_player_names: ["Juan", "Rafael"],
         players: players
       }
 
@@ -38,11 +38,14 @@ defmodule Bowling.GamesTest do
       assert {:ok, _game} = Games.start(game)
 
       expected_game_1 = %Game{
-        current_player: "Maria",
+        current_player_name: "Maria",
         current_turn: 1,
         id: id,
-        next_players: ["Juan"],
-        players: [%Player{frame_scores: [], frames: [[9]], name: "Maria", total_score: 0}, %Player{name: "Juan"}]
+        next_player_names: ["Juan"],
+        players: [
+          %Player{frame_scores: [], frames: [[9]], name: "Maria", total_score: 0},
+          %Player{name: "Juan"}
+        ]
       }
 
       assert {:ok, expected_game_1} == Games.add_fallen_pins(id, 9)
@@ -55,13 +58,14 @@ defmodule Bowling.GamesTest do
       Games.add_fallen_pins(id, 8)
 
       expected_game_2 = %Game{
-        current_player: "Maria",
+        current_player_name: "Maria",
         current_turn: 3,
         id: id,
-        next_players: ["Juan"],
+        next_player_names: ["Juan"],
         players: [
-          %Player{frame_scores: [9, 8], frames: [[9,0],[7,1]], name: "Maria", total_score: 17},
-          %Player{frame_scores: [18, 8], frames: [[5,5],[8,0]], name: "Juan", total_score: 26}]
+          %Player{frame_scores: [9, 8], frames: [[9, 0], [7, 1]], name: "Maria", total_score: 17},
+          %Player{frame_scores: [18, 8], frames: [[5, 5], [8, 0]], name: "Juan", total_score: 26}
+        ]
       }
 
       assert {:ok, expected_game_2} == Games.add_fallen_pins(id, 0)

@@ -7,7 +7,7 @@ defmodule Bowling.Games.PlayersHandlerTest do
 
   describe "continue_playing?/2" do
     test "continue" do
-      frames = [[1,2], [1]]
+      frames = [[1, 2], [1]]
       player = %Player{frames: frames}
       assert :continue == PlayersHandler.continue_playing?(player, 1)
 
