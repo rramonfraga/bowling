@@ -14,9 +14,9 @@ defmodule BowlingWeb.V1.GamesControllerTest do
         "game" => %{
           "id" => id,
           "players" => [
-            %{"frames" => [], "name" => "Maria", "frame_scores" => 0, "total_score" => 0},
-            %{"frames" => [], "name" => "Juan", "frame_scores" => 0, "total_score" => 0},
-            %{"frames" => [], "name" => "Rafael", "frame_scores" => 0, "total_score" => 0}
+            %{"frame_scores" => [], "frames" => [], "name" => "Maria", "total_score" => 0},
+            %{"frame_scores" => [], "frames" => [], "name" => "Juan", "total_score" => 0},
+            %{"frame_scores" => [], "frames" => [], "name" => "Rafael", "total_score" => 0}
           ],
           "current_player_name" => "Maria",
           "current_turn" => 1,
@@ -70,23 +70,66 @@ defmodule BowlingWeb.V1.GamesControllerTest do
     end
   end
 
-  describe "update/2" do
+  describe "show/2" do
     test "on success", %{conn: conn} do
-      game_id = "LANE-2W"
-      game_params = %{"game_id" => game_id, "players" => ["Maria", "Juan", "Rafael"]}
-
       # Create Game
+      game_id = "LANE-3W"
+      game_params = %{"game_id" => game_id, "players" => ["Maria", "Juan", "Rafael"]}
       post(conn, ~p"/api/v1/game", game_params)
 
+      # Find game
+      expected_response = %{
+        "game" => %{
+          "id" => game_id,
+          "players" => [
+            %{"frame_scores" => [], "frames" => [], "name" => "Maria", "total_score" => 0},
+            %{"frame_scores" => [], "frames" => [], "name" => "Juan", "total_score" => 0},
+            %{"frame_scores" => [], "frames" => [], "name" => "Rafael", "total_score" => 0}
+          ],
+          "current_player_name" => "Maria",
+          "current_turn" => 1,
+          "next_player_names" => ["Juan", "Rafael"]
+        }
+      }
+
+      response =
+        conn
+        |> get(~p"/api/v1/game/#{game_id}")
+        |> json_response(200)
+
+      assert expected_response == response
+    end
+
+    test "on error when not found", %{conn: conn} do
+      game_id = "LANE-not-found-web"
+      expected_response = %{"error" => "Not Found"}
+
+      response =
+        conn
+        |> get(~p"/api/v1/game/#{game_id}")
+        |> json_response(404)
+
+      assert expected_response == response
+    end
+  end
+
+  describe "update/2" do
+    test "on success", %{conn: conn} do
+      # Create Game
+      game_id = "LANE-3W"
+      game_params = %{"game_id" => game_id, "players" => ["Maria", "Juan", "Rafael"]}
+      post(conn, ~p"/api/v1/game", game_params)
+
+      # Update Game
       raw_params = %{"fallen_pins" => 8}
 
       expected_response = %{
         "game" => %{
-          "id" => "LANE-2W",
+          "id" => game_id,
           "players" => [
-            %{"frames" => ['\b'], "name" => "Maria", "frame_scores" => [], "total_score" => 0},
-            %{"frames" => [], "name" => "Juan", "frame_scores" => 0, "total_score" => 0},
-            %{"frame_scores" => 0, "frames" => [], "name" => "Rafael", "total_score" => 0}
+            %{"frame_scores" => [], "frames" => ['\b'], "name" => "Maria", "total_score" => 0},
+            %{"frame_scores" => [], "frames" => [], "name" => "Juan", "total_score" => 0},
+            %{"frame_scores" => [], "frames" => [], "name" => "Rafael", "total_score" => 0}
           ],
           "current_player_name" => "Maria",
           "current_turn" => 1,
@@ -116,7 +159,7 @@ defmodule BowlingWeb.V1.GamesControllerTest do
     end
 
     test "on error when missing some field", %{conn: conn} do
-      game_id = "LANE-2W"
+      game_id = "LANE-3W"
       raw_params = %{}
       expected_response = %{"error" => "Bad Request: Field \"fallen_pins\" is mandatory"}
 
@@ -129,7 +172,7 @@ defmodule BowlingWeb.V1.GamesControllerTest do
     end
 
     test "on error when players ", %{conn: conn} do
-      game_id = "LANE-2W"
+      game_id = "LANE-3W"
       raw_params = %{"fallen_pins" => "2"}
       expected_response = %{"error" => "Bad Request: Field \"fallen_pins\" is not a integer"}
 

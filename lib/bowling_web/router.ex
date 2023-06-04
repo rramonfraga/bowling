@@ -9,6 +9,7 @@ defmodule BowlingWeb.Router do
     pipe_through :api
 
     post("/game", GamesController, :create)
+    get("/game/:game_id", GamesController, :show)
     patch("/game/:game_id", GamesController, :update)
   end
 end

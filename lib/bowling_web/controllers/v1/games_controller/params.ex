@@ -12,6 +12,12 @@ defmodule BowlingWeb.V1.GamesController.Params do
     end
   end
 
+  def parse_show(raw_params) do
+    with {:ok, game_id} <- parse_game_id(raw_params) do
+      {:ok, game_id}
+    end
+  end
+
   def parse_patch(raw_params) do
     with {:ok, game_id} <- parse_game_id(raw_params),
          {:ok, fallen_pins} <- parse_fallen_pins(raw_params) do

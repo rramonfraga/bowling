@@ -15,7 +15,7 @@ defmodule Bowling.Games.Models.Player do
           total_score: total_score
         }
 
-  defstruct frame_scores: 0,
+  defstruct frame_scores: [],
             frames: [],
             name: nil,
             total_score: 0

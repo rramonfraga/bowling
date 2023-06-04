@@ -19,6 +19,22 @@ defmodule BowlingWeb.V1.GamesController do
     end
   end
 
+  def show(conn, raw_params) do
+    with {:ok, game_id} <- Params.parse_show(raw_params),
+         {:ok, game} <- Bowling.find_game(game_id) do
+      Helpers.json_resp(conn, :ok, %{game: Serializer.serialize(game)})
+    else
+      :not_found ->
+        Helpers.json_resp(conn, :not_found)
+
+      {:wrong_format, error} ->
+        Helpers.json_resp(conn, :bad_request, error)
+
+      _error ->
+        Helpers.json_resp(conn, :server_error)
+    end
+  end
+
   def update(conn, raw_params) do
     with {:ok, game_id, fallen_pins} <- Params.parse_patch(raw_params),
          {:ok, game} <- Bowling.add_fallen_pins_in_a_game(game_id, fallen_pins) do
