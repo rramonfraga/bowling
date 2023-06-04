@@ -12,6 +12,13 @@ defmodule BowlingWeb.V1.GamesController.Params do
     end
   end
 
+  def parse_patch(raw_params) do
+    with {:ok, game_id} <- parse_game_id(raw_params),
+         {:ok, fallen_pins} <- parse_fallen_pins(raw_params) do
+      {:ok, game_id, fallen_pins}
+    end
+  end
+
   defp build_game(game_id, players) do
     %Game{id: game_id, players: Enum.map(players, &%Player{name: &1})}
   end
@@ -36,6 +43,16 @@ defmodule BowlingWeb.V1.GamesController.Params do
     end
   end
 
+  defp parse_fallen_pins(data) do
+    with {:ok, fallen_pins} <- Map.fetch(data, "fallen_pins"),
+         {:is_integer, true} <- {:is_integer, is_integer(fallen_pins)} do
+      {:ok, fallen_pins}
+    else
+      :error -> {:wrong_format, presence_error("fallen_pins")}
+      {:is_integer, false} -> {:wrong_format, integer_error("fallen_pins")}
+    end
+  end
+
   defp is_list_of_strings(value) do
     case is_list(value) && Enum.all?(value, &is_binary(&1)) do
       true -> :is_list_of_strings
@@ -48,6 +65,9 @@ defmodule BowlingWeb.V1.GamesController.Params do
 
   defp string_error(field),
     do: ~s[Field "#{field}" is not a string]
+
+  defp integer_error(field),
+    do: ~s[Field "#{field}" is not a integer]
 
   defp list_of_strings_error(field),
     do: ~s[Field "#{field}" is not a list of strings]

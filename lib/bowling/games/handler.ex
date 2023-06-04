@@ -21,12 +21,12 @@ defmodule Bowling.Games.Handler do
   end
 
   defp do_set_turn(
-        %Game{
-          current_turn: current_turn,
-          next_player_names: [],
-          players: [current_player | rest_players]
-        } = game
-      ) do
+         %Game{
+           current_turn: current_turn,
+           next_player_names: [],
+           players: [current_player | rest_players]
+         } = game
+       ) do
     %{
       game
       | current_player_name: current_player.name,

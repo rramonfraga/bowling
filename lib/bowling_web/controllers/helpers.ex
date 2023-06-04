@@ -3,6 +3,9 @@ defmodule BowlingWeb.Controllers.Helpers do
 
   alias BowlingWeb.Controllers.Serializer
 
+  def json_resp(conn, :not_found),
+    do: json_resp(conn, 404, Serializer.not_found())
+
   def json_resp(conn, :server_error),
     do: json_resp(conn, 500, Serializer.internal_error())
 

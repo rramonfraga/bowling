@@ -15,6 +15,10 @@ defmodule BowlingWeb.Controllers.Serializer do
     data
   end
 
+  def not_found() do
+    %{error: "Not Found"}
+  end
+
   def bad_request(error) do
     %{error: "Bad Request: #{error}"}
   end
