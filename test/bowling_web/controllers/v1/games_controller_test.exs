@@ -73,7 +73,7 @@ defmodule BowlingWeb.V1.GamesControllerTest do
   describe "show/2" do
     test "on success", %{conn: conn} do
       # Create Game
-      game_id = "LANE-3W"
+      game_id = "LANE-2W"
       game_params = %{"game_id" => game_id, "players" => ["Maria", "Juan", "Rafael"]}
       post(conn, ~p"/api/v1/game", game_params)
 
@@ -159,7 +159,7 @@ defmodule BowlingWeb.V1.GamesControllerTest do
     end
 
     test "on error when missing some field", %{conn: conn} do
-      game_id = "LANE-3W"
+      game_id = "LANE-3W-missing"
       raw_params = %{}
       expected_response = %{"error" => "Bad Request: Field \"fallen_pins\" is mandatory"}
 
@@ -171,8 +171,8 @@ defmodule BowlingWeb.V1.GamesControllerTest do
       assert expected_response == response
     end
 
-    test "on error when players ", %{conn: conn} do
-      game_id = "LANE-3W"
+    test "on error when fallen pins are not an integer", %{conn: conn} do
+      game_id = "LANE-3W-wrong-request"
       raw_params = %{"fallen_pins" => "2"}
       expected_response = %{"error" => "Bad Request: Field \"fallen_pins\" is not a integer"}
 

@@ -9,8 +9,11 @@ defmodule Bowling.Games do
 
   @spec start(Game.t()) :: {:ok, Game.t()} | {:error, term}
   def start(%Game{} = game) do
-    case GameHandler.set_turn(game) do
-      {:ok, game} -> GameSupervisor.start(game)
+    with {:ok, game} <- GameHandler.set_turn(game),
+         {:ok, game} <- GameSupervisor.start(game) do
+      {:ok, game}
+    else
+      {:error, :already_started} -> :game_already_created
       error -> error
     end
   end
@@ -22,6 +25,9 @@ defmodule Bowling.Games do
          {:ok, game} <- GameHandler.set_turn(game),
          {:ok, game} <- GameWorker.update(game) do
       {:ok, game}
+    else
+      :invalid_turn -> :game_is_ended
+      error -> error
     end
   end
 

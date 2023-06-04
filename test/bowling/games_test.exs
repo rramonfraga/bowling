@@ -26,7 +26,7 @@ defmodule Bowling.GamesTest do
       game = %Game{id: "LANE-2", players: players}
       assert {:ok, _game} = Games.start(game)
 
-      assert {:error, :already_started} == Games.start(game)
+      assert :game_already_created == Games.start(game)
     end
   end
 
