@@ -24,4 +24,9 @@ defmodule Bowling.Games do
       {:ok, game}
     end
   end
+
+  @spec find(Game.id()) :: {:ok, Game.t()} | {:error, term}
+  def find(game_id) do
+    GameWorker.fetch_by_id(game_id)
+  end
 end
